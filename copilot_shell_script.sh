@@ -1,49 +1,30 @@
 #!/bin/bash
 
-# Copilot Shell Script - Update assignment and check submissions
+# copilot_shell_script.sh
+# This script updates the ASSIGNMENT value in config/config.env and reruns startup.sh
 
-echo "============================================"
-echo "   Assignment Reminder Copilot Script"
-echo "============================================"
-echo ""
+# Prompt user for the new assignment name
+read -p "Enter the new assignment name: " new_assignment
 
-# Prompt user for the assignment name
-echo "Enter the new assignment name:"
-read assignment_name
-
-# Check if the user entered something
-if [ -z "$assignment_name" ]; then
-    echo "Error: Assignment name cannot be empty!"
-    exit 1
-fi
-
-# Path to the config file
-config_file="./config/config.env"
+CONFIG_FILE=$(find . -type f -name "config.env")
 
 # Check if config.env exists
-if [ ! -f "$config_file" ]; then
-    echo "Error: config.env file not found at $config_file"
+if [ ! -f "$CONFIG_FILE" ]; then
+    echo "Error: $CONFIG_FILE not found."
     exit 1
 fi
 
-# Use sed to replace the ASSIGNMENT value in config.env
-# This finds the line starting with ASSIGNMENT= and replaces the entire line
-sed -i "s/^ASSIGNMENT=.*/ASSIGNMENT=\"$assignment_name\"/" "$config_file"
-
-# Check if sed was successful
-if [ $? -eq 0 ]; then
-    echo ""
-    echo "✓ Assignment updated successfully to: $assignment_name"
-    echo "✓ Updated in: $config_file"
-    echo ""
-    echo "============================================"
-    echo "   Running Startup Script..."
-    echo "============================================"
-    echo ""
-    
-    # Run the startup.sh script to check submissions for the new assignment
-    ./startup.sh
+# Update the ASSIGNMENT value in config.env
+if grep -q "^ASSIGNMENT=" "$CONFIG_FILE"; then
+    sed -i "s|^ASSIGNMENT=.*$|ASSIGNMENT=\"$new_assignment\"|" "$CONFIG_FILE"
 else
-    echo "Error: Failed to update the assignment in config.env"
-    exit 1
+    # If ASSIGNMENT is not present, add it
+    echo "ASSIGNMENT=$new_assignment" >> "$CONFIG_FILE"
 fi
+
+# Find the directory containing config.env and run the correct startup.sh
+app_dir="$(dirname "$(dirname "$CONFIG_FILE")")"
+
+# Move to the App Directory and Run startup.sh to check student submission status for new assignment
+cd $app_dir
+./startup.sh

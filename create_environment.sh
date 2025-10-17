@@ -65,10 +65,10 @@ Luffy, Python scripting, not submitted
 Obito, MySQL basics, submitted
 Killua, Django framework, submitted
 Gon, Shell permissions, not submitted
-Gojo, Git, submitted
+Gojo, Bash scripting, submitted
 Naruto, Shell Navigation, not submitted
 Sasuke, Docker basics, submitted
-Sakura, Git, not submitted
+Sakura, API development, not submitted
 Kakashi, Shell Navigation, submitted
 Itachi, Web Development, not submitted
 EOF
@@ -78,7 +78,7 @@ cat > submission_reminder_$name/config/config.env << 'EOF'
 #!/bin/bash
 
 # This is the config file
-ASSIGNMENT="Git"
+ASSIGNMENT="Shell Navigation"
 DAYS_REMAINING=2
 EOF
 
@@ -96,71 +96,13 @@ fi
 ./app/reminder.sh
 EOF
 
-# Creating copilot_shell_script.sh (Task 2)
-cat > submission_reminder_$name/copilot_shell_script.sh << 'EOF'
-#!/bin/bash
-
-# Copilot Shell Script - Update assignment and check submissions
-
-echo "============================================"
-echo "   Assignment Reminder Copilot Script"
-echo "============================================"
-echo ""
-
-# Prompt user for the assignment name
-echo "Enter the new assignment name:"
-read assignment_name
-
-# Check if the user entered something
-if [ -z "$assignment_name" ]; then
-    echo "Error: Assignment name cannot be empty!"
-    exit 1
-fi
-
-# Path to the config file
-config_file="./config/config.env"
-
-# Check if config.env exists
-if [ ! -f "$config_file" ]; then
-    echo "Error: config.env file not found at $config_file"
-    exit 1
-fi
-
-# Use sed to replace the ASSIGNMENT value in config.env
-# This finds the line starting with ASSIGNMENT= and replaces the entire line
-sed -i "s/^ASSIGNMENT=.*/ASSIGNMENT=\"$assignment_name\"/" "$config_file"
-
-# Check if sed was successful
-if [ $? -eq 0 ]; then
-    echo ""
-    echo "✓ Assignment updated successfully to: $assignment_name"
-    echo "✓ Updated in: $config_file"
-    echo ""
-    echo "============================================"
-    echo "   Running Startup Script..."
-    echo "============================================"
-    echo ""
-    
-    # Run the startup.sh script to check submissions for the new assignment
-    ./startup.sh
-else
-    echo "Error: Failed to update the assignment in config.env"
-    exit 1
-fi
-EOF
-
 # Making all .sh files executable
 chmod +x submission_reminder_$name/app/reminder.sh
 chmod +x submission_reminder_$name/modules/functions.sh
 chmod +x submission_reminder_$name/config/config.env
 chmod +x submission_reminder_$name/startup.sh
-chmod +x submission_reminder_$name/copilot_shell_script.sh
 
 echo "Environment created successfully!"
-echo ""
 echo "To run the application:"
 echo "  cd submission_reminder_$name"
 echo "  ./startup.sh"
-echo ""
-echo "To change the assignment and rerun:"
-echo "  ./copilot_shell_script.sh"
