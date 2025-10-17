@@ -1,9 +1,9 @@
-# Submission Reminder
+# Submission Reminder App
 
 This project is a simple shell-based application to check for pending assignment submissions and send reminders for students that are yet to submit.
 
 
-## Usage
+## Usage of the app
 
 A step by step guide to that tell you how to get a development env running:
 
